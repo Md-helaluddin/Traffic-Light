@@ -7,6 +7,7 @@ class TrafficLight {
       GREEN = green;
       YELLOW = yellow;
       RED = red;
+
       pinMode(GREEN, OUTPUT);
       pinMode(YELLOW, OUTPUT);
       pinMode(RED, OUTPUT);
@@ -29,24 +30,19 @@ class TrafficLight {
       digitalWrite(YELLOW, LOW);
       digitalWrite(RED, HIGH);
     }
-
-    void allOff() {
-      digitalWrite(GREEN, LOW);
-      digitalWrite(YELLOW, LOW);
-      digitalWrite(RED, LOW);
-    }
 };
 
 class PedestrianLight {
   private:
-    int RED, GREEN;
+    int GREEN, RED;
 
   public:
-    PedestrianLight(int red, int green) {
-      RED = red;
+    PedestrianLight(int green, int red) {
       GREEN = green;
-      pinMode(RED, OUTPUT);
+      RED = red;
+
       pinMode(GREEN, OUTPUT);
+      pinMode(RED, OUTPUT);
     }
 
     void greenOn() {
@@ -58,17 +54,12 @@ class PedestrianLight {
       digitalWrite(GREEN, LOW);
       digitalWrite(RED, HIGH);
     }
-
-    void allOff() {
-      digitalWrite(GREEN, LOW);
-      digitalWrite(RED, LOW);
-    }
 };
 
 class PedestrianButton {
   private:
     int buttonPin;
-  
+
   public:
     PedestrianButton(int button) {
       buttonPin = button;
@@ -80,9 +71,9 @@ class PedestrianButton {
     }
 };
 
-TrafficLight carLight(4, 3, 2);  
-PedestrianLight pedLight(9, 8);  
-PedestrianButton button(7);      
+TrafficLight carLight(4, 3, 2);
+PedestrianLight pedLight(8, 9);
+PedestrianButton button(7);
 
 int carState = 0;
 bool pedestrianWaiting = false;
@@ -94,54 +85,50 @@ void setup() {
 void loop() {
   unsigned long currentTime = millis();
 
-  if (button.isPressed() && carState == 0) {
-    pedestrianWaiting = true;
+  if (carState == 0) {
+    carLight.greenOn();
+    pedLight.redOn();
+
+    if (lastChangeTime == 0) {
+      lastChangeTime = currentTime;
+    }
+
+    if (button.isPressed()) {
+      carLight.redOn();
+      pedLight.greenOn();
+      delay(5000);
+      carState = 2;
+      lastChangeTime = 0;
+      return;
+    }
+
+    if (currentTime - lastChangeTime >= 10000) {
+      carState = 1;
+      lastChangeTime = currentTime;
+    }
   }
 
-  switch (carState) {
-    case 0:
-      if (currentTime - lastChangeTime >= 10000 || pedestrianWaiting) {
-        carLight.yellowOn();
-        carState = 1;
-        lastChangeTime = currentTime;
-        pedestrianWaiting = false;
-      } else {
-        carLight.greenOn();
-        pedLight.redOn();
-      }
-      break;
+  if (carState == 1) {
+    carLight.yellowOn();
+    pedLight.redOn();
+    delay(2000);
+    carState = 2;
+    lastChangeTime = 0;
+  }
 
-    case 1:
-      if (currentTime - lastChangeTime >= 2000) {
-        carLight.redOn();
-        pedLight.greenOn();
-        carState = 2;
-        lastChangeTime = currentTime;
-      } else {
-        carLight.yellowOn();
-      }
-      break;
+  if (carState == 2) {
+    carLight.redOn();
+    pedLight.greenOn();
+    delay(5000);
+    carState = 3;
+    lastChangeTime = 0;
+  }
 
-    case 2:
-      if (currentTime - lastChangeTime >= 5000) {
-        carLight.yellowOn();
-        pedLight.redOn();
-        carState = 3;
-        lastChangeTime = currentTime;
-      } else {
-        carLight.redOn();
-        pedLight.greenOn();
-      }
-      break;
-
-    case 3:
-      if (currentTime - lastChangeTime >= 2000) {
-        carLight.greenOn();
-        carState = 0;
-        lastChangeTime = currentTime;
-      } else {
-        carLight.yellowOn();
-      }
-      break;
+  if (carState == 3) {
+    carLight.yellowOn();
+    pedLight.redOn();
+    delay(2000);
+    carState = 0;
+    lastChangeTime = 0;
   }
 }
