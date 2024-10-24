@@ -85,50 +85,53 @@ void setup() {
 void loop() {
   unsigned long currentTime = millis();
 
-  if (carState == 0) {
-    carLight.greenOn();
-    pedLight.redOn();
+  switch (carState) {
+    case 0:
+      carLight.greenOn();
+      pedLight.redOn();
 
-    if (lastChangeTime == 0) {
-      lastChangeTime = currentTime;
-    }
+      if (lastChangeTime == 0) {
+        lastChangeTime = currentTime;
+      }
 
-    if (button.isPressed()) {
+      if (button.isPressed()) {
+        carLight.redOn();
+        pedLight.greenOn();
+        delay(5000);
+        carState = 2;
+        lastChangeTime = 0;
+        break;
+      }
+
+      if (currentTime - lastChangeTime >= 10000) {
+        carState = 1;
+        lastChangeTime = currentTime;
+      }
+      break;
+
+    case 1:
+      carLight.yellowOn();
+      pedLight.redOn();
+      delay(2000);
+      carState = 2;
+      lastChangeTime = 0;
+      break;
+
+    case 2:
       carLight.redOn();
       pedLight.greenOn();
       delay(5000);
-      carState = 2;
+      carState = 3;
       lastChangeTime = 0;
-      return;
-    }
+      break;
 
-    if (currentTime - lastChangeTime >= 10000) {
-      carState = 1;
-      lastChangeTime = currentTime;
-    }
-  }
-
-  if (carState == 1) {
-    carLight.yellowOn();
-    pedLight.redOn();
-    delay(2000);
-    carState = 2;
-    lastChangeTime = 0;
-  }
-
-  if (carState == 2) {
-    carLight.redOn();
-    pedLight.greenOn();
-    delay(5000);
-    carState = 3;
-    lastChangeTime = 0;
-  }
-
-  if (carState == 3) {
-    carLight.yellowOn();
-    pedLight.redOn();
-    delay(2000);
-    carState = 0;
-    lastChangeTime = 0;
+    case 3:
+      carLight.yellowOn();
+      pedLight.redOn();
+      delay(2000);
+      carState = 0;
+      lastChangeTime = 0;
+      break;
   }
 }
+
