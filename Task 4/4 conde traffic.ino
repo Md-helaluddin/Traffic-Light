@@ -82,11 +82,11 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(2), handleButtonPress, FALLING);
 }
 
-const unsigned long tGreen = 5000;
-const unsigned long tYellow = 2000;
-const unsigned long tRed = 5000;
+const unsigned long tGreen = 7000;
+const unsigned long tYellow = 3000;
+const unsigned long tRed = 6000;
 
-
+int click;
 
 void loop() {   
     mainPart();
@@ -108,15 +108,21 @@ void mainPart() {
 
   switch (carState) {
     case Green:
-      carLight.greenOn();
-      pedLight.redOn();
-    
-      if (TimeCheck >= tGreen || waiting) {
-        carState = Yellow;
-        lastChangeTime = currentTime;
-      }
-      StateDetector = 0;
-      break;
+  carLight.greenOn();
+  pedLight.redOn();
+
+  if (waiting) {  
+    carState = Yellow;
+    lastChangeTime = currentTime; 
+    click = 5;
+  } 
+  else if (TimeCheck >= tGreen) { 
+    carState = Yellow;
+    lastChangeTime = currentTime;
+  }
+  StateDetector = 0;
+  break;
+
 
     case Yellow:
       carLight.yellowOn();
@@ -126,17 +132,29 @@ void mainPart() {
         carState = (StateDetector == 0) ? Red : Green;
         lastChangeTime = currentTime;
       }
+      
       break;
 
     case Red:
-      carLight.redOn();
-      pedLight.greenOn();
+      
+      if(click == 5)
+      {
+          carLight.redOn();
+          pedLight.greenOn();
+      }
+      else 
+      {
+          carLight.redOn();
+          
+      }
+      
     
       if (TimeCheck >= tRed) {
         carState = Yellow;
         lastChangeTime = currentTime;
       }
       StateDetector = 1;
+      click = 6;
       break;
   }
 }
