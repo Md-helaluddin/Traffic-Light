@@ -86,7 +86,7 @@ const unsigned long tGreen = 5000;
 const unsigned long tYellow = 2000;
 const unsigned long tRed = 5000;
 
-
+int click;
 
 void loop() {   
     mainPart();
@@ -111,9 +111,15 @@ void mainPart() {
       carLight.greenOn();
       pedLight.redOn();
     
-      if (TimeCheck >= tGreen || waiting) {
+      if (TimeCheck >= tGreen) {
         carState = Yellow;
         lastChangeTime = currentTime;
+      }
+      
+      if(waiting){
+          
+          carState = Yellow;
+          click = 5;
       }
       StateDetector = 0;
       break;
@@ -126,17 +132,29 @@ void mainPart() {
         carState = (StateDetector == 0) ? Red : Green;
         lastChangeTime = currentTime;
       }
+      
       break;
 
     case Red:
-      carLight.redOn();
-      pedLight.greenOn();
+      
+      if(click == 5)
+      {
+          carLight.redOn();
+          pedLight.greenOn();
+      }
+      else 
+      {
+          carLight.redOn();
+          
+      }
+      
     
       if (TimeCheck >= tRed) {
         carState = Yellow;
         lastChangeTime = currentTime;
       }
       StateDetector = 1;
+      click = 6;
       break;
   }
 }
