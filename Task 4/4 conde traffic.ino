@@ -82,9 +82,15 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(2), handleButtonPress, FALLING);
 }
 
+<<<<<<< HEAD:Task 4/4 conde traffic.ino
 const unsigned long tGreen = 7000;
 const unsigned long tYellow = 3000;
 const unsigned long tRed = 6000;
+=======
+const unsigned long tGreen = 5000;
+const unsigned long tYellow = 2000;
+const unsigned long tRed = 5000;
+>>>>>>> 596d2d783d69b0594305ce8e9b7decd81a8829e5:Task 4/4 code.ino
 
 int click;
 
@@ -108,6 +114,7 @@ void mainPart() {
 
   switch (carState) {
     case Green:
+<<<<<<< HEAD:Task 4/4 conde traffic.ino
   carLight.greenOn();
   pedLight.redOn();
 
@@ -123,6 +130,23 @@ void mainPart() {
   StateDetector = 0;
   break;
 
+=======
+      carLight.greenOn();
+      pedLight.redOn();
+    
+      if (TimeCheck >= tGreen) {
+        carState = Yellow;
+        lastChangeTime = currentTime;
+      }
+      
+      if(waiting){
+          
+          carState = Yellow;
+          click = 5;
+      }
+      StateDetector = 0;
+      break;
+>>>>>>> 596d2d783d69b0594305ce8e9b7decd81a8829e5:Task 4/4 code.ino
 
     case Yellow:
       carLight.yellowOn();
