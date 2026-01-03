@@ -7,7 +7,7 @@ This project documents the development of an intelligent and modular **Traffic L
 ## Project Highlights
 
 ### Finite State Machine (FSM)
-- Implemented robust control logic using a **switch-case based FSM** in **C** to manage traffic light transitions and timing.
+- Implemented robust control logic using a **switch-case** in **C** to manage traffic light transitions and timing.
 
 ### Pedestrian Integration
 - Designed a **request-based pedestrian crossing system** that prioritizes pedestrian safety while enforcing a minimum green-light duration of **10 time units** for vehicles.
