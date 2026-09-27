@@ -33,6 +33,7 @@ class TrafficLight {
 };
 
 TrafficLight carLight(4, 3, 2);
+TrafficLight carLight(5, 6, 6);
 
 enum TrafficState {
   Green,
